@@ -2,90 +2,67 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { cn } from "@/lib/utils"
-import { fontSans } from "@/lib/fonts"
+import usePosts from "@/services/product"
+import constants from "./constants"
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
 
-    paymentMethod: "PayPal",
-  },
+const data = [
   {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
+    transactionDate: 'arif ganteng',
+    invoiceID: 'Invoice ID',
+    customer: 'Customer',
+    quantity: 'Quantity',
+    transactions: 'Transactions',
+    action: 'Action'
+  }, {
+    transactionDate: 'Transaction Date',
+    invoiceID: 'Invoice ID',
+    customer: 'Customer',
+    quantity: 'Quantity',
+    transactions: 'Transactions',
+    action: 'Action'
   },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
+
 ]
 
+const transformedData = data.map(datum => ({
+  ...datum,
+
+}))
+
+
 export default function IndexPage() {
+
+  const { data } = usePosts.getListProduct({ variables: { limit: 500 } })
+  const { LIST_COLUMN } = constants
+  const headerKey = Object.keys(constants.LIST_COLUMN)
+
   return (
-    <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+    <main className="bg-green">
+      <Table>
+
+        <TableHeader>
+          <TableRow>
+            {headerKey.map(col => (
+              <TableHead className="w-[100px]">{constants.LIST_COLUMN[col]}</TableHead>
+            ))}
+
           </TableRow>
-        ))}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {transformedData.map((data) => (
+            <TableRow>
+              {Object.keys(LIST_COLUMN).map(key => (
+                <TableCell className="font-medium">{data?.[key]}</TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table></main>
   )
 }
